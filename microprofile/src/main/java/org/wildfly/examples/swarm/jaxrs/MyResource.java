@@ -49,6 +49,30 @@ public class MyResource {
         return "Chaining " + body;
     }
 
+    @GET
+    @Path("chainingException")
+    @Produces("text/plain")
+    public String chainingException() throws MalformedURLException, URISyntaxException {
+        String inUrl = uri.getAbsolutePath().toString();
+        inUrl = inUrl.replace("/chainingException", "") + "/exception";
+        System.out.println(inUrl);
+
+        ClientBase client = RestClientBuilder.newBuilder()
+            .baseUrl(new URL(inUrl))
+            .build(ClientBase.class);
+
+        client.get();
+
+        return "ChainingException ";
+    }
+
+    @GET
+    @Path("exception")
+    @Produces("text/plain")
+    public String exception() {
+        throw new RuntimeException();
+    }
+
     @Path("/")
     public interface ClientBase {
         @GET
